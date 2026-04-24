@@ -1,0 +1,27 @@
+{
+  "video_url": "https://example.com/watch/some-video",
+  "output": "output.mp4",
+
+  "login": {
+    "url": "https://example.com/login",
+    "username": "your_username",
+    "password": "your_password",
+    "username_selector": "input[name='email']",
+    "password_selector": "input[name='password']",
+    "submit_selector": "button[type='submit']",
+    "success_url_contains": "/dashboard",
+    "manual": false
+  },
+
+  "play_selector": ".play-button, video",
+  "wait_seconds_after_play": 8,
+
+  "preferred_quality": "highest",
+
+  "concurrency": 12,
+  "max_retries": 6,
+  "headless": false,
+  "keep_segments": false,
+
+  "user_data_dir": ".browser-profile"
+}
