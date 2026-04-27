@@ -1,7 +1,7 @@
 {
-  "login_url": "https://recu.me/account/signin",
-  "email": "rjgetvd121@monexa.club",
-  "password": "rjgetvd121@monexa.club",
+  "login_url": "https://-----/account/signin",
+  "email": "",
+  "password": "",
   "proxy": null,
   "selectors": {
     "username": "#input_email",
