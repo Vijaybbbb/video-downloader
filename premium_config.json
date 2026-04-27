@@ -11,7 +11,7 @@
     "get_it_now": "#btn-order-enable-promo"
   },
   "urls": {
-    "my_account": "https://recu.me/account",
-    "upgrade": "https://recu.me/account/membership/offer/limited?url=L2FjY291bnQ="
+    "my_account": "https://----------/account",
+    "upgrade": "https:/-----------/account/membership/offer/limited?url=L2FjY291bnQ="
   }
 }
