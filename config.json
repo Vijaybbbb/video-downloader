@@ -1,10 +1,10 @@
 {
-  "video_url": "https://recu.me/danny_cutler/video/178027736/play",
+  "video_url": "",
   "output": "output.mp4",
   "login": {
-    "url": "https://recu.me/account/signin?url=Lw==",
-    "username": "b58adb5e0a@ryzenmail.com",
-    "password": "b58adb5e0a@ryzenmail.com",
+    "url": "",
+    "username": "",
+    "password": "",
     "username_selector": "#input_email",
     "password_selector": "#input_password",
     "submit_selector": "button[type='submit']",
