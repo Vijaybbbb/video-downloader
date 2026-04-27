@@ -1,8 +1,21 @@
+# browser profiles
 .browser-profile/
-config.json
+.premium-profile/
+
+# configs with credentials
+
+# python
 __pycache__/
 *.pyc
 *.pyo
 .env
 venv/
+
+# output & temp files
 downloads/
+_segments/
+*.mp4
+*.ts
+seg.txt
+test.txt
+output.*

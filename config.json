@@ -1,0 +1,22 @@
+{
+  "video_url": "https://recu.me/danny_cutler/video/178027736/play",
+  "output": "output.mp4",
+  "login": {
+    "url": "https://recu.me/account/signin?url=Lw==",
+    "username": "b58adb5e0a@ryzenmail.com",
+    "password": "b58adb5e0a@ryzenmail.com",
+    "username_selector": "#input_email",
+    "password_selector": "#input_password",
+    "submit_selector": "button[type='submit']",
+    "success_url_contains": "",
+    "manual": true
+  },
+  "play_selector": "#play_button",
+  "wait_seconds_after_play": 8,
+  "preferred_quality": "highest",
+  "concurrency": 12,
+  "max_retries": 6,
+  "headless": false,
+  "keep_segments": false,
+  "user_data_dir": ".browser-profile"
+}

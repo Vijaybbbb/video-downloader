@@ -349,35 +349,51 @@ class Session:
         log(f"navigating to login page {lg['url']}")
         await self.page.goto(lg["url"], wait_until="domcontentloaded")
         await self._solve_cloudflare_if_any()
+        # extra wait for page to fully settle after CF
+        await asyncio.sleep(2)
+        log("  filling credentials")
+        await self.page.wait_for_selector(lg["username_selector"], timeout=30000)
         await self.page.fill(lg["username_selector"], lg["username"])
         await self.page.fill(lg["password_selector"], lg["password"])
-        await asyncio.gather(
-            self.page.wait_for_load_state("networkidle"),
-            self.page.click(lg["submit_selector"]),
-        )
+        try:
+            await asyncio.gather(
+                self.page.wait_for_load_state("networkidle", timeout=15000),
+                self.page.click(lg["submit_selector"]),
+            )
+        except Exception:
+            pass  # page may redirect before networkidle
+        await asyncio.sleep(3)
         marker = lg.get("success_url_contains")
         if marker:
-            for _ in range(30):
+            for _ in range(15):
                 if marker in self.page.url:
                     break
                 await asyncio.sleep(1)
             else:
-                log(f"warning: login success marker '{marker}' not seen; current url: {self.page.url}")
-        log("login complete")
+                log(f"  note: marker '{marker}' not in url: {self.page.url} (continuing anyway)")
+        log(f"login complete — url: {self.page.url}")
 
-    async def _solve_cloudflare_if_any(self, timeout: float = 45.0):
+    async def _solve_cloudflare_if_any(self, timeout: float = 60.0):
         """Wait for Cloudflare interstitial to pass (it clears itself in normal Chromium)."""
         start = time.time()
         while time.time() - start < timeout:
             try:
                 await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
                 title = (await self.page.title()).lower()
-                if "just a moment" not in title and "checking your browser" not in title:
-                    return
+                url = self.page.url.lower()
+                if ("just a moment" in title
+                        or "checking your browser" in title
+                        or "challenge" in url
+                        or "cdn-cgi" in url):
+                    elapsed = time.time() - start
+                    log(f"  CF challenge active ({elapsed:.0f}s)...")
+                    await asyncio.sleep(2)
+                    continue
+                return
             except Exception:
                 pass
-            await asyncio.sleep(1)
-        log("Cloudflare challenge still pending; continuing anyway")
+            await asyncio.sleep(2)
+        log("⚠ Cloudflare challenge still pending after timeout; continuing anyway")
 
     async def open_video_and_capture(self) -> CapturedStream:
         video_url = self.cfg["video_url"]
@@ -725,10 +741,19 @@ async def run(cfg: dict) -> None:
             raise RuntimeError("no segments parsed from media playlist")
         log(f"{len(segments)} segments to download — letting browser fetch them by playing video")
 
+        # save playlist + base URL for segdl.py
+        base_url = chosen.url.rsplit("/", 1)[0] + "/"
+        with open("seg.txt", "w") as sf:
+            sf.write(f"# base_url={base_url}\n")
+            sf.write(text)
+        log(f"saved seg.txt (base: {base_url})")
+        log(f"  → to re-download later: python segdl.py \"{base_url}\" --playlist seg.txt")
+
         # play through the video to capture all segments
         total = len(segments)
-        estimated_duration = total * 2
-        log(f"playing through video at 16x speed (estimated {estimated_duration//60}min)...")
+        estimated_duration = total * 2  # total video seconds
+        estimated_minutes = estimated_duration / 16 / 60  # at 16x speed
+        log(f"playing through video at 16x speed (estimated {estimated_minutes:.1f}min)...")
 
         async def _nudge_video():
             """Ensure video is playing at max speed, unmuted won't block autoplay."""

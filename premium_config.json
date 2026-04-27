@@ -1,0 +1,17 @@
+{
+  "login_url": "https://recu.me/account/signin",
+  "email": "rjgetvd121@monexa.club",
+  "password": "rjgetvd121@monexa.club",
+  "proxy": null,
+  "selectors": {
+    "username": "#input_email",
+    "password": "#input_password",
+    "login_submit": "button[type='submit']",
+    "upgrade": "a[href*='/account/membership/offer/limited']",
+    "get_it_now": "#btn-order-enable-promo"
+  },
+  "urls": {
+    "my_account": "https://recu.me/account",
+    "upgrade": "https://recu.me/account/membership/offer/limited?url=L2FjY291bnQ="
+  }
+}
